@@ -1,7 +1,9 @@
 package classes;
 
 import javax.vecmath.Point3d;
+import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 
 /**
  * This triangle class is used for the triangle meshes.
@@ -48,7 +50,7 @@ public class Triangle {
 		pApB.sub(pA, pB);
 		Vector3d pApC = new Vector3d();
 		pApB.sub(pA, pC);
-		normalVector.cross(pApB, pApC);
+		normalVector.cross(pApC, pApB);
 		normalVector.normalize();
 	}
 
@@ -86,6 +88,10 @@ public class Triangle {
 	 */
 	public Vector3d getNormalVector() {
 		return normalVector;
+	}
+	
+	public Vector3f getNormalVectorAsFloat() {
+		return new Vector3f(normalVector);
 	}
 
 	@Override

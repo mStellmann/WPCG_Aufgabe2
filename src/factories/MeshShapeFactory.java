@@ -7,6 +7,7 @@ import javax.media.j3d.GeometryArray;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.TriangleArray;
 import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
 
 import classes.AppearanceHelper;
 import classes.Triangle;
@@ -18,7 +19,7 @@ import com.sun.j3d.utils.geometry.NormalGenerator;
  * Factory for converting a ITriangleMesh into a Shape3D.
  * 
  * @author Matthias Stellmann & Grzegorz Markiewicz
- *
+ * 
  */
 public class MeshShapeFactory {
 	/**
@@ -33,29 +34,24 @@ public class MeshShapeFactory {
 
 		int i = 0;
 		for (Triangle elem : mesh.getTriangleList()) {
-			// Converting Vector3d to floatArray
-			float[] normals = { (float) elem.getNormalVector().x, (float) elem.getNormalVector().y, (float) elem.getNormalVector().z };
-			// Setting first coordinate and normal of the triangle
-			triAry.setCoordinate(i, mesh.getVertex(elem.getI()));
-			triAry.setNormal(i++, normals);
-			// Setting second coordinate and normal of the triangle
-			triAry.setCoordinate(i, mesh.getVertex(elem.getJ()));
-			triAry.setNormal(i++, normals);
-			// Setting third coordinate and normal of the triangle
-			triAry.setCoordinate(i, mesh.getVertex(elem.getK()));
-			triAry.setNormal(i++, normals);
+			Point3d[] coords = { mesh.getVertex(elem.getI()), mesh.getVertex(elem.getJ()), mesh.getVertex(elem.getK()) };
+			// Setting the coordinates and the normals of the triangle
+			triAry.setCoordinates(i, coords);
+			triAry.setNormal(i++, elem.getNormalVectorAsFloat());
+			triAry.setNormal(i++, elem.getNormalVectorAsFloat());
+			triAry.setNormal(i++, elem.getNormalVectorAsFloat());
 		}
 
 		GeometryInfo geoInfo = new GeometryInfo(triAry);
-		
+
 		// TODO Why is this necessary?
-//		NormalGenerator ng = new NormalGenerator();
-//		ng.generateNormals(geoInfo);
-		
+		NormalGenerator ng = new NormalGenerator();
+		ng.generateNormals(geoInfo);
+
 		GeometryArray geoAry = geoInfo.getGeometryArray();
 
 		Shape3D resultShape = new Shape3D(geoAry, new Appearance());
-		AppearanceHelper.setColor(resultShape,  new Color3f(0.2f, 0.7f, 0f));
+		AppearanceHelper.setColor(resultShape, new Color3f(0.2f, 0.7f, 0f));
 		return resultShape;
 
 	}
